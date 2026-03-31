@@ -11,7 +11,27 @@ A dedicated helper process will isolate privileged execution from bot business l
 - Helper is the only component allowed to perform privileged AWG/kernel calls.
 - Node host remains the source of truth for runtime state.
 
-## Planned helper commands
+## Current stage
+Protocol draft only.
+
+- Runtime helper process is **not implemented**.
+- Runtime commands are **not executed** by the app yet.
+- No IPC/transport implementation exists (no HTTP, JSON-RPC, Unix socket, subprocess wiring).
+
+## Read-only protocol draft in this phase
+The repository now includes `app/backends/helper_protocol.py` with request/result envelopes
+for read-only command interaction shape.
+
+Read-only command DTO scope:
+- `healthcheck`
+- `peer-show`
+- `peer-list`
+- `config-render`
+
+Mutation commands remain in `HelperCommand` contract only and are intentionally not expanded
+into transport DTOs in this phase.
+
+## Planned helper commands (full contract target)
 - `peer-add`
 - `peer-disable`
 - `peer-delete`
@@ -21,12 +41,9 @@ A dedicated helper process will isolate privileged execution from bot business l
 - `reconcile`
 - `healthcheck`
 
-These commands are contract targets for future implementation and may evolve minimally
-as runtime integration work starts.
-
-## Scope in this PR
-Node-helper is **not** implemented in this PR.
-This PR only defines command names and keeps backend stubs aligned with this contract.
+## Next step
+Add a helper-facing adapter stub that consumes protocol DTOs but still does not execute
+real node/system commands.
 
 ## Responsibility boundaries
 - **bot**: Telegram interaction and user flow orchestration.

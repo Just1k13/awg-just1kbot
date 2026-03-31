@@ -14,3 +14,11 @@ class HelperCommand(StrEnum):
     CONFIG_RENDER = "config-render"
     RECONCILE = "reconcile"
     HEALTHCHECK = "healthcheck"
+
+
+READ_ONLY_HELPER_COMMANDS: tuple[HelperCommand, ...] = (
+    HelperCommand.HEALTHCHECK,
+    HelperCommand.PEER_SHOW,
+    HelperCommand.PEER_LIST,
+    HelperCommand.CONFIG_RENDER,
+)

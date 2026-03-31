@@ -1,7 +1,7 @@
 # Architecture
 
 ## Current stage
-Foundation + backend boundary + single-node preflight.
+Foundation + backend boundary + single-node preflight + read-only helper protocol draft.
 
 ## In scope now
 - Telegram bot runtime skeleton with aiogram.
@@ -10,6 +10,7 @@ Foundation + backend boundary + single-node preflight.
 - Minimal domain model and repository skeletons.
 - Minimal AWG backend contract and kernel backend stub (no runtime logic).
 - Application-level single-node preflight checks.
+- Read-only helper protocol DTO draft (`app/backends/helper_protocol.py`).
 - Draft documentation for future node-helper boundary.
 
 ## Out of scope now
@@ -17,6 +18,8 @@ Foundation + backend boundary + single-node preflight.
 - Referral and anti-abuse mechanics.
 - Real AWG peer operations.
 - Node-helper implementation.
+- Runtime command execution from the app process.
+- IPC/transport implementation for helper communication.
 - Multi-node orchestration logic.
 - Web UI, Redis, and task queues.
 
@@ -24,12 +27,12 @@ Foundation + backend boundary + single-node preflight.
 - `bot/`: bot entrypoint and handlers.
 - `app/config/`: typed settings from env.
 - `app/db/`: ORM models, session setup, repositories.
-- `app/backends/`: backend contract and kernel AWG stub.
+- `app/backends/`: backend contract, helper command/protocol drafts, and kernel AWG stub.
 - `app/services/node_preflight.py`: application-level preflight for default single-node runtime.
 - `docs/`: project architecture, roadmap, and helper contract draft.
 
 ## Development direction
-1. Safe read-only kernel integration planning (helper-facing wiring).
+1. Helper-facing adapter stub using read-only protocol DTOs (still no runtime execution).
 2. Subscription flows.
 3. Profile generation and export.
 4. Second node support.
