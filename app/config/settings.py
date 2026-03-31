@@ -25,6 +25,7 @@ class AppRuntimeSettings(BaseSettings):
     env: str = "dev"
     debug: bool = False
     log_level: str = "INFO"
+    default_node_code: str | None = None
 
 
 class Settings(BaseSettings):

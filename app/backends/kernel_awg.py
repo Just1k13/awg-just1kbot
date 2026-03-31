@@ -10,6 +10,7 @@ from app.backends.base import (
     AwgBackend,
     CreatePeerInput,
     CreatePeerResult,
+    HealthcheckResult,
     PeerRuntimeState,
     RenderProfileConfigResult,
 )
@@ -19,10 +20,10 @@ from app.db.models import Node, ProfileNode
 class KernelAwgBackend(AwgBackend):
     """Stub implementation for single-node Linux kernel AWG backend."""
 
-    async def healthcheck(self, node: Node) -> bool:
+    async def healthcheck(self, node: Node) -> HealthcheckResult:
         """Check whether node-level AWG runtime is healthy."""
-        # TODO: run helper-mediated health probe (awg/tooling availability).
-        # TODO: wire to node-helper contract so bot process does not require root.
+        # TODO: run helper-mediated health probe (no direct root-required calls in bot process).
+        # TODO: wire healthcheck to node-helper command: `healthcheck`.
         raise NotImplementedError("Kernel AWG healthcheck is not implemented yet")
 
     async def render_profile_config(
@@ -31,25 +32,25 @@ class KernelAwgBackend(AwgBackend):
     ) -> RenderProfileConfigResult:
         """Render exported client config for a profile-node mapping."""
         # TODO: render client config from stored peer/node metadata.
-        # TODO: keep config rendering behind node-helper/api boundary.
+        # TODO: wire to node-helper command: `config-render`.
         raise NotImplementedError("Kernel AWG config render is not implemented yet")
 
     async def create_peer(self, request: CreatePeerInput) -> CreatePeerResult:
         """Create a peer in kernel AWG runtime."""
-        # TODO: call awg peer-add via node-helper when helper contract is ready.
+        # TODO: call node-helper `peer-add`.
         raise NotImplementedError("Kernel AWG peer creation is not implemented yet")
 
     async def disable_peer(self, profile_node: ProfileNode) -> None:
         """Disable an existing peer without deleting profile metadata."""
-        # TODO: call awg peer-disable via node-helper.
+        # TODO: call node-helper `peer-disable`.
         raise NotImplementedError("Kernel AWG peer disable is not implemented yet")
 
     async def delete_peer(self, profile_node: ProfileNode) -> None:
         """Delete peer from kernel AWG runtime."""
-        # TODO: call awg peer-delete via node-helper.
+        # TODO: call node-helper `peer-delete`.
         raise NotImplementedError("Kernel AWG peer delete is not implemented yet")
 
     async def get_peer_runtime(self, profile_node: ProfileNode) -> PeerRuntimeState:
         """Read current peer runtime state from kernel AWG runtime."""
-        # TODO: read runtime state from awg peer-show/peer-list via node-helper.
+        # TODO: read runtime state via node-helper `peer-show` / `peer-list`.
         raise NotImplementedError("Kernel AWG peer runtime read is not implemented yet")

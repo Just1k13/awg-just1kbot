@@ -39,8 +39,10 @@ def upgrade() -> None:
         "nodes",
         sa.Column("id", sa.Integer(), primary_key=True),
         sa.Column("code", sa.String(length=50), nullable=False),
-        sa.Column("name", sa.String(length=128), nullable=False),
-        sa.Column("endpoint", sa.String(length=255), nullable=False),
+        sa.Column("public_host", sa.String(length=255), nullable=False),
+        sa.Column("public_port", sa.Integer(), nullable=False),
+        sa.Column("interface_name", sa.String(length=64), nullable=False),
+        sa.Column("subnet_cidr", sa.String(length=64), nullable=False),
         sa.Column("is_active", sa.Boolean(), nullable=False, server_default=sa.true()),
         sa.Column(
             "created_at",

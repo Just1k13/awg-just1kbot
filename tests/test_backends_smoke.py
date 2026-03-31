@@ -6,6 +6,8 @@ import pytest
 from app.backends import (
     AwgBackend,
     CreatePeerInput,
+    HealthcheckResult,
+    HelperCommand,
     KernelAwgBackend,
     PeerRuntimeState,
     RenderProfileConfigResult,
@@ -20,9 +22,26 @@ def test_backend_contract_imports() -> None:
 def test_backend_dto_smoke() -> None:
     rendered = RenderProfileConfigResult(content="[Interface]")
     runtime = PeerRuntimeState(enabled=False)
+    health = HealthcheckResult(ok=True)
 
     assert rendered.file_name == "client.conf"
     assert runtime.last_handshake_at is None
+    assert health.ok is True
+
+
+def test_helper_command_contract_has_required_commands() -> None:
+    required = {
+        HelperCommand.PEER_ADD,
+        HelperCommand.PEER_DISABLE,
+        HelperCommand.PEER_DELETE,
+        HelperCommand.PEER_SHOW,
+        HelperCommand.PEER_LIST,
+        HelperCommand.CONFIG_RENDER,
+        HelperCommand.RECONCILE,
+        HelperCommand.HEALTHCHECK,
+    }
+    backend = KernelAwgBackend()
+    assert required.issubset(set(backend.supported_helper_commands))
 
 
 def test_kernel_awg_stub_methods_raise_not_implemented() -> None:

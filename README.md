@@ -2,6 +2,8 @@
 
 Production-minded foundation for a future Telegram bot that manages access in an AWG-based setup.
 
+Current stage: foundation + backend boundary + single-node preflight (no real kernel integration yet).
+
 ## Current scope (implemented)
 - Clean project structure for bot, domain, db, and docs.
 - Typed environment-based settings (Pydantic v2).
