@@ -15,3 +15,15 @@ def test_settings_load_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
     assert settings.db.dsn.endswith("/test")
     assert settings.app.env == "test"
     assert settings.app.debug is True
+
+
+def test_settings_load_default_node_code_from_flat_env(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setenv("BOT_TOKEN", "123456:token")
+    monkeypatch.setenv("DATABASE_URL", "postgresql+asyncpg://u:p@localhost:5432/test")
+    monkeypatch.setenv("DEFAULT_NODE_CODE", "main")
+
+    settings = Settings()
+
+    assert settings.app.default_node_code == "main"

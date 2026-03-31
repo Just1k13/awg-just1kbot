@@ -40,23 +40,4 @@ async def inspect_profile_runtime(
 
 def describe_backend_capabilities(backend: AwgBackend) -> BackendCapabilitySnapshot:
     """Expose static backend capability snapshot for planning-level wiring."""
-    get_capabilities = getattr(backend, "get_capabilities", None)
-    if callable(get_capabilities):
-        return get_capabilities()
-
-    helper_commands = getattr(backend, "helper_commands", ())
-    if not helper_commands:
-        helper_commands = (
-            "healthcheck",
-            "peer-show",
-            "peer-list",
-            "config-render",
-        )
-
-    return BackendCapabilitySnapshot(
-        backend_name=backend.__class__.__name__,
-        helper_commands=frozenset(helper_commands),
-        supports_runtime_inspection=False,
-        supports_config_rendering=False,
-        supports_peer_mutation=False,
-    )
+    return backend.get_capabilities()
