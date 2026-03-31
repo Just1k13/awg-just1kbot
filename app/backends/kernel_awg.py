@@ -6,7 +6,7 @@ The project is currently in foundation phase, so backend runtime operations are
 not implemented yet.
 """
 
-from app.backends.base import BackendCapabilitySnapshot, (
+from app.backends.base import (
     AwgBackend,
     CreatePeerInput,
     CreatePeerResult,
@@ -55,22 +55,13 @@ class KernelAwgBackend(AwgBackend):
         # TODO: read runtime state via node-helper `peer-show` / `peer-list`.
         raise NotImplementedError("Kernel AWG peer runtime read is not implemented yet")
 
-def _kernel_awg_get_capabilities(self) -> BackendCapabilitySnapshot:
-    """Return a static capability snapshot for the current stub backend."""
+def _kernel_awg_get_capabilities(self):
+    from app.backends.base import BackendCapabilitySnapshot
+    from app.backends.helper_contract import HelperCommand
+
     return BackendCapabilitySnapshot(
         backend_name="kernel_awg",
-        helper_commands=frozenset(
-            {
-                "healthcheck",
-                "peer-show",
-                "peer-list",
-                "config-render",
-                "peer-add",
-                "peer-disable",
-                "peer-delete",
-                "reconcile",
-            }
-        ),
+        helper_commands=frozenset(HelperCommand),
         supports_runtime_inspection=True,
         supports_config_rendering=True,
         supports_peer_mutation=False,
@@ -78,4 +69,3 @@ def _kernel_awg_get_capabilities(self) -> BackendCapabilitySnapshot:
 
 
 KernelAwgBackend.get_capabilities = _kernel_awg_get_capabilities
-
