@@ -1,10 +1,10 @@
 # Roadmap
 
 ## Current phase
-Foundation scaffold + backend boundary + single-node preflight + read-only helper protocol draft + deterministic adapter stub + helper-facing client boundary + read-only backend wiring + runtime inspection foundation.
+Foundation scaffold + backend boundary + single-node preflight + helper protocol DTOs + deterministic adapter/client stubs + backend wiring for read-only and mutation methods + runtime inspection foundation.
 
 ## Planned phases
-1. Mutation protocol planning or real helper transport boundary design behind helper client/gateway (still without runtime execution in product paths).
+1. Real helper transport boundary behind helper client/gateway (still without runtime execution in app process).
 2. Subscription flows.
 3. Profile generation/export.
 4. Second node support.
@@ -13,8 +13,8 @@ Foundation scaffold + backend boundary + single-node preflight + read-only helpe
 7. Hardening and operations.
 
 ## Phase notes
-- Current phase includes backend interfaces/stubs, helper command contract, read-only protocol DTOs, deterministic adapter stub + helper-facing client boundary, read-only `KernelAwgBackend` wiring, and runtime inspection service.
+- Current phase includes backend interfaces/stubs, helper command contract, read-only + mutation protocol DTOs, deterministic adapter stub, helper-facing client boundary, `KernelAwgBackend` wiring, and runtime inspection service.
 - Real kernel integration is not implemented yet.
 - Node-helper implementation is not started yet.
-- Runtime commands are still not invoked by the app.
-- Peer lifecycle mutation operations are not implemented yet.
+- Runtime/system commands are still not invoked by the app.
+- `reconcile` is available at protocol/client/adapter level as the next operational command.
