@@ -11,7 +11,19 @@ from app.backends.base import (
     PeerRuntimeState,
     RenderProfileConfigResult,
 )
-from app.backends.helper_contract import HelperCommand
+from app.backends.helper_adapter import HelperAdapterStub
+from app.backends.helper_contract import READ_ONLY_HELPER_COMMANDS, HelperCommand
+from app.backends.helper_protocol import (
+    ConfigRenderResponse,
+    HealthcheckResponse,
+    HelperCommandRequest,
+    HelperCommandResult,
+    HelperErrorCode,
+    HelperProtocolError,
+    PeerListItem,
+    PeerListResponse,
+    PeerShowResponse,
+)
 from app.backends.kernel_awg import KernelAwgBackend
 
 __all__ = [
@@ -19,11 +31,22 @@ __all__ = [
     "BackendCapabilitySnapshot",
     "CreatePeerInput",
     "CreatePeerResult",
+    "RenderProfileConfigResult",
+    "PeerRuntimeState",
     "HealthcheckResult",
     "NodeHealthSnapshot",
     "PeerRuntimeSnapshot",
-    "PeerRuntimeState",
-    "RenderProfileConfigResult",
+    "HelperAdapterStub",
     "HelperCommand",
+    "READ_ONLY_HELPER_COMMANDS",
+    "HelperCommandRequest",
+    "HelperCommandResult",
+    "HelperErrorCode",
+    "HelperProtocolError",
+    "HealthcheckResponse",
+    "PeerShowResponse",
+    "PeerListItem",
+    "PeerListResponse",
+    "ConfigRenderResponse",
     "KernelAwgBackend",
 ]
