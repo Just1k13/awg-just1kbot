@@ -5,6 +5,7 @@ import pytest
 
 from app.backends import (
     AwgBackend,
+    BackendCapabilitySnapshot,
     CreatePeerInput,
     HealthcheckResult,
     HelperCommand,
@@ -61,3 +62,13 @@ def test_kernel_awg_stub_methods_raise_not_implemented() -> None:
         asyncio.run(backend.delete_peer(profile_node))
     with pytest.raises(NotImplementedError):
         asyncio.run(backend.get_peer_runtime(profile_node))
+    with pytest.raises(NotImplementedError):
+        asyncio.run(backend.list_peer_runtime(node))
+
+
+def test_kernel_awg_capabilities_smoke() -> None:
+    capabilities = KernelAwgBackend().get_capabilities()
+
+    assert isinstance(capabilities, BackendCapabilitySnapshot)
+    assert capabilities.backend_name == "kernel_awg"
+    assert capabilities.supports_runtime_inspection is True

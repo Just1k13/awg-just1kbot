@@ -37,6 +37,14 @@ class DummyBackend(AwgBackend):
         raise NotImplementedError
 
 
+class DummyBackendWithCapabilities(DummyBackend):
+    def get_capabilities(self) -> BackendCapabilitySnapshot:
+        return BackendCapabilitySnapshot(
+            backend_name="dummy_backend",
+            supports_runtime_inspection=True,
+        )
+
+
 def test_inspect_node_runtime_smoke() -> None:
     backend = DummyBackend()
     node = Node(
@@ -61,7 +69,8 @@ def test_inspect_profile_runtime_smoke() -> None:
 
 
 def test_describe_backend_capabilities_smoke() -> None:
-    capabilities = describe_backend_capabilities(DummyBackend())
+    capabilities = describe_backend_capabilities(DummyBackendWithCapabilities())
 
     assert isinstance(capabilities, BackendCapabilitySnapshot)
-    assert len(capabilities.read_only_commands) > 0
+    assert capabilities.backend_name == "dummy_backend"
+    assert capabilities.supports_runtime_inspection is True

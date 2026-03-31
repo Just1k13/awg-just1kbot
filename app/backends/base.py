@@ -95,6 +95,20 @@ class AwgBackend(ABC):
     async def get_peer_runtime(self, profile_node: ProfileNode) -> PeerRuntimeState:
         """Return current peer runtime status from backend."""
 
+    @abstractmethod
+    async def list_peer_runtime(self, node: Node) -> tuple[PeerRuntimeState, ...]:
+        """Return runtime snapshots for peers known on the node."""
+
+    def get_capabilities(self) -> BackendCapabilitySnapshot:
+        """Describe backend capabilities for read-only runtime wiring."""
+        return BackendCapabilitySnapshot(
+            backend_name=self.__class__.__name__,
+            helper_commands=frozenset(self.supported_helper_commands),
+            supports_runtime_inspection=False,
+            supports_config_rendering=False,
+            supports_peer_mutation=False,
+        )
+
 @dataclass(slots=True, frozen=True)
 class BackendCapabilitySnapshot:
     """Describes which capabilities a backend exposes."""
@@ -136,4 +150,3 @@ class BackendCapabilitySnapshot:
 # Backward-compatible aliases for runtime inspection layer.
 NodeHealthSnapshot = HealthcheckResult
 PeerRuntimeSnapshot = PeerRuntimeState
-

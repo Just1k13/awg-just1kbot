@@ -46,6 +46,7 @@ class Settings(BaseSettings):
     database_url: str | None = Field(default=None, alias="DATABASE_URL")
     app_env: str | None = Field(default=None, alias="APP_ENV")
     debug: bool | None = Field(default=None, alias="DEBUG")
+    default_node_code: str | None = Field(default=None, alias="DEFAULT_NODE_CODE")
 
     @model_validator(mode="after")
     def normalize_flat_env_vars(self) -> "Settings":
@@ -59,6 +60,8 @@ class Settings(BaseSettings):
             self.app.env = self.app_env
         if self.debug is not None:
             self.app.debug = self.debug
+        if self.default_node_code is not None:
+            self.app.default_node_code = self.default_node_code
 
         if self.bot is None or self.db is None:
             raise ValueError("Bot token and database DSN must be configured")
