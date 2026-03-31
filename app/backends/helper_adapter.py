@@ -1,4 +1,4 @@
-"""Deterministic helper adapter for read-only protocol commands.
+"""Deterministic helper adapter for helper protocol commands.
 
 This module intentionally keeps command handling deterministic and in-process.
 Helper boundary concerns live in ``app.backends.helper_client``.
@@ -17,8 +17,10 @@ from app.backends.helper_protocol import (
     HelperCommandResult,
     HelperErrorCode,
     HelperProtocolError,
+    PeerAddResponse,
     PeerListResponse,
     PeerShowResponse,
+    ReconcileResponse,
 )
 
 
@@ -29,12 +31,16 @@ class HelperAdapterStub:
     """
 
     def execute(self, request: HelperCommandRequest) -> HelperCommandResult:
-        """Return deterministic read-only results without runtime/system calls."""
+        """Return deterministic results without runtime/system calls."""
         handlers: dict[HelperCommand, Callable[[dict[str, object]], HelperCommandResult]] = {
             HelperCommand.HEALTHCHECK: self._handle_healthcheck,
             HelperCommand.PEER_SHOW: self._handle_peer_show,
             HelperCommand.PEER_LIST: self._handle_peer_list,
             HelperCommand.CONFIG_RENDER: self._handle_config_render,
+            HelperCommand.PEER_ADD: self._handle_peer_add,
+            HelperCommand.PEER_DISABLE: self._handle_peer_disable,
+            HelperCommand.PEER_DELETE: self._handle_peer_delete,
+            HelperCommand.RECONCILE: self._handle_reconcile,
         }
 
         handler = handlers.get(request.command)
@@ -76,4 +82,24 @@ class HelperAdapterStub:
         response = ConfigRenderResponse(
             content="# helper adapter stub\n[Interface]\n# TODO: wire real helper",
         )
+        return HelperCommandResult(success=True, payload=asdict(response))
+
+    def _handle_peer_add(self, payload: dict[str, object]) -> HelperCommandResult:
+        profile_node_id = payload.get("profile_node_id")
+        if isinstance(profile_node_id, int):
+            backend_peer_id = f"stub-peer-{profile_node_id}"
+        else:
+            backend_peer_id = "stub-peer-unknown"
+
+        response = PeerAddResponse(backend_peer_id=backend_peer_id)
+        return HelperCommandResult(success=True, payload=asdict(response))
+
+    def _handle_peer_disable(self, _payload: dict[str, object]) -> HelperCommandResult:
+        return HelperCommandResult(success=True, payload={})
+
+    def _handle_peer_delete(self, _payload: dict[str, object]) -> HelperCommandResult:
+        return HelperCommandResult(success=True, payload={})
+
+    def _handle_reconcile(self, _payload: dict[str, object]) -> HelperCommandResult:
+        response = ReconcileResponse(scanned_peers=0, updated_peers=0, removed_peers=0)
         return HelperCommandResult(success=True, payload=asdict(response))

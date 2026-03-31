@@ -2,7 +2,7 @@
 
 Production-minded foundation for a future Telegram bot that manages access in an AWG-based setup.
 
-Current stage: foundation + backend boundary + helper protocol + deterministic helper adapter stub + helper-facing client boundary + runtime inspection foundation (no real kernel integration yet).
+Current stage: foundation + backend boundary + helper protocol + deterministic helper adapter stub + helper-facing client boundary + read-only/mutation backend wiring via stub client + runtime inspection foundation (no real kernel integration yet).
 
 ## Current scope (implemented)
 - Clean project structure for bot, domain, db, and docs.
@@ -12,14 +12,17 @@ Current stage: foundation + backend boundary + helper protocol + deterministic h
 - Minimal domain models for future access-management flows.
 - Minimal aiogram bot foundation with `/start` and `/help`.
 - Backend abstraction layer for AWG runtime integration (`app/backends`).
-- Read-only helper protocol DTO draft, deterministic helper adapter stub, and helper-facing client boundary.
+- Helper protocol DTO draft for read-only and mutation commands.
+- Deterministic helper adapter stub and helper-facing client boundary.
 - Runtime inspection service wiring over explicit backend read-only methods.
+- Kernel backend mutation methods wired through helper client/protocol using deterministic stub behavior.
 - Basic quality tooling setup: pytest, Ruff, mypy, Makefile.
 
 ## Intentionally out of scope (not implemented)
 - Real integration with `amneziawg-linux-kernel-module` / `amneziawg-tools`.
-- Real AWG peer lifecycle operations.
 - Node-helper process/runtime integration.
+- Real helper transport/IPC.
+- Runtime/system command execution from app process.
 - Payments and Telegram Stars.
 - Referral/reward system.
 - Anti-abuse logic.

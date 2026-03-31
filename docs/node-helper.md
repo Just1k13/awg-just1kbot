@@ -12,28 +12,33 @@ A dedicated helper process will isolate privileged execution from bot business l
 - Node host remains the source of truth for runtime state.
 
 ## Current stage
-Protocol draft + in-process deterministic adapter stub + helper-facing client boundary + read-only backend wiring.
+Protocol DTOs + in-process deterministic adapter stub + helper-facing client boundary + read-only and mutation backend wiring.
 
 - Runtime helper process is **not implemented**.
 - Runtime commands are **not executed** by the app yet.
 - No IPC/transport implementation exists (no HTTP, JSON-RPC, Unix socket, subprocess wiring).
-- `app/backends/helper_adapter.py` provides deterministic in-process responses for read-only DTOs.
+- `app/backends/helper_adapter.py` provides deterministic in-process responses for read-only and mutation DTOs.
 - `app/backends/helper_client.py` defines helper-facing boundary contract and a stub client that delegates to the adapter.
-- `app/backends/kernel_awg.py` now routes read-only backend methods through `HelperClient` and protocol envelopes.
+- `app/backends/kernel_awg.py` routes backend methods through `HelperClient` and protocol envelopes.
 - Failed helper results are surfaced as backend-level errors (no silent fallback path).
 
-## Read-only protocol draft in this phase
-The repository now includes `app/backends/helper_protocol.py` with request/result envelopes
-for read-only command interaction shape.
+## Protocol DTO scope in this phase
+The repository includes `app/backends/helper_protocol.py` with request/result envelopes and typed payload DTOs.
 
-Read-only command DTO scope:
+Read-only command DTOs:
 - `healthcheck`
 - `peer-show`
 - `peer-list`
 - `config-render`
 
-Mutation commands remain in `HelperCommand` contract only and are intentionally not expanded
-into transport DTOs in this phase. Backend mutation methods still raise `NotImplementedError`.
+Mutation command DTOs:
+- `peer-add`
+- `peer-disable`
+- `peer-delete`
+- `reconcile`
+
+`reconcile` is currently prepared at protocol/client/adapter level as the next operational command,
+but not yet exposed as a dedicated backend API method.
 
 ## Planned helper commands (full contract target)
 - `peer-add`
@@ -46,8 +51,8 @@ into transport DTOs in this phase. Backend mutation methods still raise `NotImpl
 - `healthcheck`
 
 ## Next step
-Design either (a) mutation-side protocol DTOs or (b) real helper transport boundary (process/IPC)
-behind `HelperClient`, still without enabling product mutations until transport safety is defined.
+Implement real helper transport boundary (process/IPC) behind `HelperClient` while still keeping
+app process free from direct runtime/system command execution.
 
 ## Responsibility boundaries
 - **bot**: Telegram interaction and user flow orchestration.

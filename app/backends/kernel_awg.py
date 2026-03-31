@@ -2,12 +2,13 @@
 
 This module intentionally exposes only a contract-compliant stub for the future
 integration with `amneziawg-linux-kernel-module` and `amneziawg-tools`.
-The project is currently in foundation phase, so backend runtime operations are
-not implemented yet.
+The project is currently in foundation phase, so runtime operations are still
+served through deterministic helper stubs.
 """
 
 from __future__ import annotations
 
+from dataclasses import asdict
 from datetime import datetime
 
 from app.backends.base import (
@@ -21,12 +22,18 @@ from app.backends.base import (
 )
 from app.backends.helper_client import HelperClient, StubHelperClient
 from app.backends.helper_contract import HelperCommand
-from app.backends.helper_protocol import HelperCommandRequest, HelperCommandResult
+from app.backends.helper_protocol import (
+    HelperCommandRequest,
+    HelperCommandResult,
+    PeerAddRequest,
+    PeerDeleteRequest,
+    PeerDisableRequest,
+)
 from app.db.models import Node, ProfileNode
 
 
 class KernelAwgBackendError(RuntimeError):
-    """Backend-level error raised when helper-facing read-only call fails."""
+    """Backend-level error raised when helper-facing call fails."""
 
 
 class KernelAwgBackend(AwgBackend):
@@ -37,7 +44,7 @@ class KernelAwgBackend(AwgBackend):
 
     async def healthcheck(self, node: Node) -> HealthcheckResult:
         """Check whether node-level AWG runtime is healthy."""
-        result = self._execute_read_only_command(
+        result = self._execute_helper_command(
             command=HelperCommand.HEALTHCHECK,
             payload={"node_id": node.id, "node_code": node.code},
         )
@@ -52,7 +59,7 @@ class KernelAwgBackend(AwgBackend):
         profile_node: ProfileNode,
     ) -> RenderProfileConfigResult:
         """Render exported client config for a profile-node mapping."""
-        result = self._execute_read_only_command(
+        result = self._execute_helper_command(
             command=HelperCommand.CONFIG_RENDER,
             payload={
                 "profile_node_id": profile_node.id,
@@ -70,23 +77,53 @@ class KernelAwgBackend(AwgBackend):
         return RenderProfileConfigResult(content=content, file_name=file_name)
 
     async def create_peer(self, request: CreatePeerInput) -> CreatePeerResult:
-        """Create a peer in kernel AWG runtime."""
-        # TODO: call node-helper `peer-add`.
-        raise NotImplementedError("Kernel AWG peer creation is not implemented yet")
+        """Create a peer in kernel AWG runtime through helper client boundary."""
+        helper_request = PeerAddRequest(
+            profile_node_id=request.profile_node.id,
+            node_id=request.profile_node.node_id,
+            profile_id=request.profile_node.profile_id,
+        )
+        result = self._execute_helper_command(
+            command=HelperCommand.PEER_ADD,
+            payload=asdict(helper_request),
+        )
+        payload = result.payload or {}
+        backend_peer_id = payload.get("backend_peer_id")
+        if not isinstance(backend_peer_id, str):
+            raise KernelAwgBackendError(
+                "helper peer-add payload must include string backend_peer_id",
+            )
+        return CreatePeerResult(backend_peer_id=backend_peer_id)
 
     async def disable_peer(self, profile_node: ProfileNode) -> None:
         """Disable an existing peer without deleting profile metadata."""
-        # TODO: call node-helper `peer-disable`.
-        raise NotImplementedError("Kernel AWG peer disable is not implemented yet")
+        helper_request = PeerDisableRequest(
+            profile_node_id=profile_node.id,
+            node_id=profile_node.node_id,
+            profile_id=profile_node.profile_id,
+            backend_peer_id=profile_node.backend_peer_id,
+        )
+        self._execute_helper_command(
+            command=HelperCommand.PEER_DISABLE,
+            payload=asdict(helper_request),
+        )
 
     async def delete_peer(self, profile_node: ProfileNode) -> None:
         """Delete peer from kernel AWG runtime."""
-        # TODO: call node-helper `peer-delete`.
-        raise NotImplementedError("Kernel AWG peer delete is not implemented yet")
+        helper_request = PeerDeleteRequest(
+            profile_node_id=profile_node.id,
+            node_id=profile_node.node_id,
+            profile_id=profile_node.profile_id,
+            backend_peer_id=profile_node.backend_peer_id,
+        )
+        self._execute_helper_command(
+            command=HelperCommand.PEER_DELETE,
+            payload=asdict(helper_request),
+        )
 
     async def get_peer_runtime(self, profile_node: ProfileNode) -> PeerRuntimeState:
         """Read current peer runtime state from kernel AWG runtime."""
-        result = self._execute_read_only_command(
+        result = self._execute_helper_command(
             command=HelperCommand.PEER_SHOW,
             payload={
                 "profile_node_id": profile_node.id,
@@ -99,7 +136,7 @@ class KernelAwgBackend(AwgBackend):
 
     async def list_peer_runtime(self, node: Node) -> tuple[PeerRuntimeState, ...]:
         """List runtime state for peers from kernel AWG runtime."""
-        result = self._execute_read_only_command(
+        result = self._execute_helper_command(
             command=HelperCommand.PEER_LIST,
             payload={"node_id": node.id, "node_code": node.code},
         )
@@ -130,10 +167,10 @@ class KernelAwgBackend(AwgBackend):
             helper_commands=frozenset(HelperCommand),
             supports_runtime_inspection=True,
             supports_config_rendering=True,
-            supports_peer_mutation=False,
+            supports_peer_mutation=True,
         )
 
-    def _execute_read_only_command(
+    def _execute_helper_command(
         self,
         command: HelperCommand,
         payload: dict[str, object],

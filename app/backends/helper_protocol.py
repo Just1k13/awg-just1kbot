@@ -1,4 +1,4 @@
-"""Protocol draft DTOs for future read-only node-helper interaction."""
+"""Protocol draft DTOs for future node-helper interaction."""
 
 from __future__ import annotations
 
@@ -6,7 +6,7 @@ from dataclasses import asdict, dataclass
 from enum import StrEnum
 from typing import Any, Literal
 
-from app.backends.helper_contract import READ_ONLY_HELPER_COMMANDS, HelperCommand
+from app.backends.helper_contract import HelperCommand
 
 
 class HelperErrorCode(StrEnum):
@@ -39,12 +39,19 @@ type ReadOnlyHelperCommand = Literal[
     HelperCommand.CONFIG_RENDER,
 ]
 
+type MutationHelperCommand = Literal[
+    HelperCommand.PEER_ADD,
+    HelperCommand.PEER_DISABLE,
+    HelperCommand.PEER_DELETE,
+    HelperCommand.RECONCILE,
+]
+
 
 @dataclass(slots=True, frozen=True)
 class HelperCommandRequest:
-    """Generic request envelope for read-only helper commands."""
+    """Generic request envelope for helper commands."""
 
-    command: ReadOnlyHelperCommand
+    command: HelperCommand
     payload: dict[str, Any]
 
     def to_dict(self) -> dict[str, Any]:
@@ -55,18 +62,12 @@ class HelperCommandRequest:
     def from_dict(cls, data: dict[str, Any]) -> HelperCommandRequest:
         """Build a request envelope from plain mapping data."""
         command = HelperCommand(data["command"])
-        cls._ensure_read_only_command(command)
 
         payload = data.get("payload")
         if not isinstance(payload, dict):
             raise ValueError("payload must be a dictionary")
 
         return cls(command=command, payload=payload)
-
-    @staticmethod
-    def _ensure_read_only_command(command: HelperCommand) -> None:
-        if command not in READ_ONLY_HELPER_COMMANDS:
-            raise ValueError(f"command {command.value!r} is not read-only")
 
 
 @dataclass(slots=True, frozen=True)
@@ -138,3 +139,56 @@ class ConfigRenderResponse:
 
     content: str
     file_name: str = "client.conf"
+
+
+@dataclass(slots=True, frozen=True)
+class PeerAddRequest:
+    """Typed payload for peer-add command."""
+
+    profile_node_id: int
+    node_id: int
+    profile_id: int
+
+
+@dataclass(slots=True, frozen=True)
+class PeerAddResponse:
+    """Typed payload for successful peer-add command."""
+
+    backend_peer_id: str
+
+
+@dataclass(slots=True, frozen=True)
+class PeerDisableRequest:
+    """Typed payload for peer-disable command."""
+
+    profile_node_id: int
+    node_id: int
+    profile_id: int
+    backend_peer_id: str | None
+
+
+@dataclass(slots=True, frozen=True)
+class PeerDeleteRequest:
+    """Typed payload for peer-delete command."""
+
+    profile_node_id: int
+    node_id: int
+    profile_id: int
+    backend_peer_id: str | None
+
+
+@dataclass(slots=True, frozen=True)
+class ReconcileRequest:
+    """Typed payload for reconcile command."""
+
+    node_id: int
+    node_code: str
+
+
+@dataclass(slots=True, frozen=True)
+class ReconcileResponse:
+    """Typed payload for deterministic reconcile summary."""
+
+    scanned_peers: int
+    updated_peers: int
+    removed_peers: int

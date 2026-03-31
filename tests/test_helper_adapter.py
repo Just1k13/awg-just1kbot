@@ -1,12 +1,4 @@
-from typing import cast
-
-from app.backends import (
-    HelperAdapterStub,
-    HelperCommand,
-    HelperCommandRequest,
-    HelperErrorCode,
-)
-from app.backends.helper_protocol import ReadOnlyHelperCommand
+from app.backends import HelperAdapterStub, HelperCommand, HelperCommandRequest
 
 
 def test_adapter_healthcheck_stub_response() -> None:
@@ -62,30 +54,63 @@ def test_adapter_config_render_stub_response() -> None:
     }
 
 
-def test_adapter_unsupported_command_returns_error_result() -> None:
+def test_adapter_peer_add_stub_response() -> None:
     adapter = HelperAdapterStub()
     request = HelperCommandRequest(
-        command=cast(ReadOnlyHelperCommand, HelperCommand.PEER_ADD),
-        payload={},
+        command=HelperCommand.PEER_ADD,
+        payload={"profile_node_id": 5, "node_id": 1, "profile_id": 11},
     )
 
     result = adapter.execute(request)
 
-    assert result.success is False
-    assert result.error is not None
-    assert result.error.code is HelperErrorCode.UNKNOWN_COMMAND
+    assert result.success is True
+    assert result.payload == {"backend_peer_id": "stub-peer-5"}
 
 
-def test_request_to_adapter_to_result_roundtrip_shape() -> None:
+def test_adapter_peer_disable_stub_response() -> None:
     adapter = HelperAdapterStub()
-    request = HelperCommandRequest.from_dict(
-        {"command": HelperCommand.HEALTHCHECK.value, "payload": {}},
+    request = HelperCommandRequest(
+        command=HelperCommand.PEER_DISABLE,
+        payload={
+            "profile_node_id": 5,
+            "node_id": 1,
+            "profile_id": 11,
+            "backend_peer_id": "peer-5",
+        },
     )
 
     result = adapter.execute(request)
 
-    assert result.to_dict() == {
-        "success": True,
-        "payload": {"ok": True, "detail": "stub-adapter"},
-        "error": None,
-    }
+    assert result.success is True
+    assert result.payload == {}
+
+
+def test_adapter_peer_delete_stub_response() -> None:
+    adapter = HelperAdapterStub()
+    request = HelperCommandRequest(
+        command=HelperCommand.PEER_DELETE,
+        payload={
+            "profile_node_id": 5,
+            "node_id": 1,
+            "profile_id": 11,
+            "backend_peer_id": "peer-5",
+        },
+    )
+
+    result = adapter.execute(request)
+
+    assert result.success is True
+    assert result.payload == {}
+
+
+def test_adapter_reconcile_stub_response() -> None:
+    adapter = HelperAdapterStub()
+    request = HelperCommandRequest(
+        command=HelperCommand.RECONCILE,
+        payload={"node_id": 1, "node_code": "main"},
+    )
+
+    result = adapter.execute(request)
+
+    assert result.success is True
+    assert result.payload == {"scanned_peers": 0, "updated_peers": 0, "removed_peers": 0}
