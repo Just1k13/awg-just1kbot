@@ -25,7 +25,7 @@ from app.backends.helper_protocol import (
     PeerListResponse,
     PeerShowResponse,
 )
-from app.backends.kernel_awg import KernelAwgBackend
+from app.backends.kernel_awg import KernelAwgBackend, KernelAwgBackendError
 
 __all__ = [
     "AwgBackend",
@@ -53,4 +53,5 @@ __all__ = [
     "PeerListResponse",
     "ConfigRenderResponse",
     "KernelAwgBackend",
+    "KernelAwgBackendError",
 ]
