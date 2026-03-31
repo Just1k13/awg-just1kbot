@@ -6,6 +6,8 @@ from app.backends.base import (
     CreatePeerInput,
     CreatePeerResult,
     HealthcheckResult,
+    NodeHealthSnapshot,
+    PeerRuntimeSnapshot,
     PeerRuntimeState,
     RenderProfileConfigResult,
 )
@@ -18,6 +20,8 @@ __all__ = [
     "CreatePeerInput",
     "CreatePeerResult",
     "HealthcheckResult",
+    "NodeHealthSnapshot",
+    "PeerRuntimeSnapshot",
     "PeerRuntimeState",
     "RenderProfileConfigResult",
     "HelperCommand",

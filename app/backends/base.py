@@ -104,3 +104,8 @@ class BackendCapabilitySnapshot:
     supports_runtime_inspection: bool = False
     supports_config_rendering: bool = False
     supports_peer_mutation: bool = False
+
+# Backward-compatible aliases for runtime inspection layer.
+NodeHealthSnapshot = HealthcheckResult
+PeerRuntimeSnapshot = PeerRuntimeState
+
