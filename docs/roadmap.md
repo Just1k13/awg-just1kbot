@@ -1,10 +1,10 @@
 # Roadmap
 
 ## Current phase
-Foundation scaffold + backend contract for future AWG runtime integration.
+Foundation scaffold + helper contract + app-level preflight + read-only integration planning.
 
 ## Planned phases
-1. Single-node kernel integration.
+1. Minimal safe helper-facing wiring / protocol draft.
 2. Subscription flows.
 3. Profile generation/export.
 4. Second node support.
@@ -13,6 +13,8 @@ Foundation scaffold + backend contract for future AWG runtime integration.
 7. Hardening and operations.
 
 ## Phase notes
-- Current phase includes only interfaces/stubs for backend and helper contract docs.
-- Next phase integrates one node with kernel AWG runtime through helper boundary.
-- Subscription and profile flows are intentionally deferred until runtime integration exists.
+- Current phase includes backend interfaces/stubs, helper command contract, app-level preflight,
+  and read-only runtime inspection wiring skeleton.
+- Real kernel runtime integration is still not implemented.
+- Helper process is still not implemented.
+- Peer mutation operations are still not implemented.

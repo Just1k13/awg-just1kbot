@@ -12,20 +12,29 @@ A dedicated helper process will isolate privileged execution from bot business l
 - Node host remains the source of truth for runtime state.
 
 ## Planned helper commands
+### Read-only commands (next implementation focus)
+- `healthcheck` — node health snapshot.
+- `peer-show` — runtime snapshot for one peer.
+- `peer-list` — runtime snapshots for all peers on node.
+- `config-render` — client config export content/metadata.
+
+### Later mutation commands
 - `peer-add`
 - `peer-disable`
 - `peer-delete`
-- `peer-show`
-- `peer-list`
-- `config-render`
 - `reconcile`
 
-These commands are contract targets for future implementation and may evolve minimally
-as runtime integration work starts.
+## Expected response shapes (planning-level)
+- `healthcheck` -> `{ ok: bool, detail?: str, checked_at?: datetime }`
+- `peer-show` -> `{ enabled: bool, last_handshake_at?: datetime, rx_bytes?: int, tx_bytes?: int, endpoint?: str }`
+- `peer-list` -> `list[peer-show shape]`
+- `config-render` -> `{ content: str, metadata: { file_name: str, content_type: str } }`
+- `reconcile` -> later-only command, no shape fixed in this phase
 
 ## Scope in this PR
 Node-helper is **not** implemented in this PR.
-This PR only introduces backend interfaces/stubs and documents expected helper boundaries.
+This PR only defines read-only and mutation command boundaries, expected result shapes,
+and keeps backend/service layers ready for safe helper-facing wiring.
 
 ## Responsibility boundaries
 - **bot**: Telegram interaction and user flow orchestration.
