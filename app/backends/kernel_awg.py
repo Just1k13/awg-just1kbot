@@ -22,6 +22,9 @@ from app.db.models import Node, ProfileNode
 class KernelAwgBackend(AwgBackend):
     """Stub implementation for single-node Linux kernel AWG backend."""
 
+    # TODO: add helper client dependency once runtime wiring starts.
+    # NOTE: backend methods stay explicit stubs for now to avoid fake runtime layers.
+
     async def healthcheck(self, node: Node) -> HealthcheckResult:
         """Check whether node-level AWG runtime is healthy."""
         # TODO: run helper-mediated health probe (no direct root-required calls in bot process).

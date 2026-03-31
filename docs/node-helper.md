@@ -12,12 +12,13 @@ A dedicated helper process will isolate privileged execution from bot business l
 - Node host remains the source of truth for runtime state.
 
 ## Current stage
-Protocol draft + in-process deterministic adapter stub.
+Protocol draft + in-process deterministic adapter stub + helper-facing client boundary.
 
 - Runtime helper process is **not implemented**.
 - Runtime commands are **not executed** by the app yet.
 - No IPC/transport implementation exists (no HTTP, JSON-RPC, Unix socket, subprocess wiring).
 - `app/backends/helper_adapter.py` provides deterministic in-process responses for read-only DTOs.
+- `app/backends/helper_client.py` defines helper-facing boundary contract and a stub client that delegates to the adapter.
 
 ## Read-only protocol draft in this phase
 The repository now includes `app/backends/helper_protocol.py` with request/result envelopes
@@ -43,8 +44,8 @@ into transport DTOs in this phase.
 - `healthcheck`
 
 ## Next step
-Add an explicit helper-facing client/gateway boundary on top of the current adapter stub,
-still without executing real node/system commands.
+Design and implement a real helper transport boundary (process/IPC) behind `HelperClient`,
+still without enabling product mutations until transport safety is defined.
 
 ## Responsibility boundaries
 - **bot**: Telegram interaction and user flow orchestration.

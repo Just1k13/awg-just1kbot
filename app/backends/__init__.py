@@ -12,6 +12,7 @@ from app.backends.base import (
     RenderProfileConfigResult,
 )
 from app.backends.helper_adapter import HelperAdapterStub
+from app.backends.helper_client import HelperClient, ProcessHelperClient, StubHelperClient
 from app.backends.helper_contract import READ_ONLY_HELPER_COMMANDS, HelperCommand
 from app.backends.helper_protocol import (
     ConfigRenderResponse,
@@ -37,6 +38,9 @@ __all__ = [
     "NodeHealthSnapshot",
     "PeerRuntimeSnapshot",
     "HelperCommand",
+    "ProcessHelperClient",
+    "StubHelperClient",
+    "HelperClient",
     "HelperAdapterStub",
     "READ_ONLY_HELPER_COMMANDS",
     "HelperCommandRequest",
