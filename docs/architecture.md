@@ -1,18 +1,19 @@
 # Architecture
 
 ## Current stage
-Foundation + backend boundary + single-node preflight + read-only helper protocol draft + deterministic adapter stub + helper-facing client boundary + runtime inspection foundation.
+Foundation + backend boundary + single-node preflight + read-only helper protocol draft + deterministic adapter stub + helper-facing client boundary + read-only kernel backend wiring + runtime inspection foundation.
 
 ## In scope now
 - Telegram bot runtime skeleton with aiogram.
 - Typed environment configuration.
 - Async SQLAlchemy and migration setup.
 - Minimal domain model and repository skeletons.
-- Minimal AWG backend contract and kernel backend stub (no runtime logic).
+- Minimal AWG backend contract and kernel backend wiring for read-only helper path.
 - Application-level single-node preflight checks.
 - Read-only helper protocol DTO draft (`app/backends/helper_protocol.py`).
 - Deterministic helper adapter stub (`app/backends/helper_adapter.py`).
 - Helper-facing client boundary with stub + real-client skeleton (`app/backends/helper_client.py`).
+- `KernelAwgBackend` read-only methods wired through `HelperClient` and protocol DTOs.
 - Runtime inspection service (`app/services/runtime_inspection.py`) aligned to backend read-only contract.
 - Draft documentation for future node-helper boundary.
 
@@ -23,6 +24,7 @@ Foundation + backend boundary + single-node preflight + read-only helper protoco
 - Node-helper implementation.
 - Runtime command execution from the app process.
 - IPC/transport implementation for helper communication.
+- Mutation wiring in `KernelAwgBackend` (`create_peer`, `disable_peer`, `delete_peer` remain unimplemented).
 - Multi-node orchestration logic.
 - Web UI, Redis, and task queues.
 
@@ -35,7 +37,7 @@ Foundation + backend boundary + single-node preflight + read-only helper protoco
 - `docs/`: project architecture, roadmap, and helper contract draft.
 
 ## Development direction
-1. Real helper transport boundary design (process/IPC contract) without product runtime mutations.
+1. Mutation protocol planning or real helper transport boundary design (process/IPC contract), keeping product runtime mutations disabled until boundary safety is defined.
 2. Subscription flows.
 3. Profile generation and export.
 4. Second node support.

@@ -12,13 +12,15 @@ A dedicated helper process will isolate privileged execution from bot business l
 - Node host remains the source of truth for runtime state.
 
 ## Current stage
-Protocol draft + in-process deterministic adapter stub + helper-facing client boundary.
+Protocol draft + in-process deterministic adapter stub + helper-facing client boundary + read-only backend wiring.
 
 - Runtime helper process is **not implemented**.
 - Runtime commands are **not executed** by the app yet.
 - No IPC/transport implementation exists (no HTTP, JSON-RPC, Unix socket, subprocess wiring).
 - `app/backends/helper_adapter.py` provides deterministic in-process responses for read-only DTOs.
 - `app/backends/helper_client.py` defines helper-facing boundary contract and a stub client that delegates to the adapter.
+- `app/backends/kernel_awg.py` now routes read-only backend methods through `HelperClient` and protocol envelopes.
+- Failed helper results are surfaced as backend-level errors (no silent fallback path).
 
 ## Read-only protocol draft in this phase
 The repository now includes `app/backends/helper_protocol.py` with request/result envelopes
@@ -31,7 +33,7 @@ Read-only command DTO scope:
 - `config-render`
 
 Mutation commands remain in `HelperCommand` contract only and are intentionally not expanded
-into transport DTOs in this phase.
+into transport DTOs in this phase. Backend mutation methods still raise `NotImplementedError`.
 
 ## Planned helper commands (full contract target)
 - `peer-add`
@@ -44,8 +46,8 @@ into transport DTOs in this phase.
 - `healthcheck`
 
 ## Next step
-Design and implement a real helper transport boundary (process/IPC) behind `HelperClient`,
-still without enabling product mutations until transport safety is defined.
+Design either (a) mutation-side protocol DTOs or (b) real helper transport boundary (process/IPC)
+behind `HelperClient`, still without enabling product mutations until transport safety is defined.
 
 ## Responsibility boundaries
 - **bot**: Telegram interaction and user flow orchestration.
