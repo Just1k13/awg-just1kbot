@@ -44,7 +44,7 @@ make install-dev
 cp .env.example .env
 ```
 
-By default `.env.example` points `DATABASE_URL` to `localhost:5432/awg_bot` and sets `DEFAULT_NODE_CODE=main`.
+By default `.env.example` points `DATABASE_URL` to `localhost:5432/awg_bot`.
 
 ### 4) Start PostgreSQL locally
 You can use any local PostgreSQL instance.

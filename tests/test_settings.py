@@ -8,7 +8,6 @@ def test_settings_load_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("DATABASE_URL", "postgresql+asyncpg://u:p@localhost:5432/test")
     monkeypatch.setenv("APP_ENV", "test")
     monkeypatch.setenv("DEBUG", "true")
-    monkeypatch.setenv("DEFAULT_NODE_CODE", "main")
 
     settings = Settings()
 
@@ -16,4 +15,3 @@ def test_settings_load_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
     assert settings.db.dsn.endswith("/test")
     assert settings.app.env == "test"
     assert settings.app.debug is True
-    assert settings.app.default_node_code == "main"
