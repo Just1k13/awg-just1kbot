@@ -1,13 +1,18 @@
 # TODO
 
-## Current: single-node preflight + helper contract
+## Current: single-node preflight + helper protocol draft
 - [x] Keep backend/helper boundary explicit and typed.
 - [x] Add application-level single-node preflight checks.
+- [x] Add read-only helper protocol DTO draft for request/result envelopes.
 - [ ] Keep kernel backend operations as stubs only.
 
-## Next: safe read-only kernel integration planning
-- [ ] Define read-only helper-facing wiring for health/runtime inspection.
-- [ ] Document safe integration constraints before any mutating operations.
+## Next: helper-facing adapter stub (no runtime execution)
+- [ ] Add adapter stub that accepts protocol DTOs and returns deterministic stub results.
+- [ ] Keep runtime commands uncalled (no subprocess/system integration).
+
+## Later: mutation protocol expansion
+- [ ] Expand transport DTOs for mutation commands when helper execution work starts.
+- [ ] Document mutation safety constraints before implementation.
 
 ## Later: subscription flows
 - [ ] Define subscription state transitions and renewal rules.
