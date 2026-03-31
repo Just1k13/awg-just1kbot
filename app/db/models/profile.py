@@ -14,7 +14,10 @@ class Profile(Base):
     __tablename__ = "profiles"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    slot_id: Mapped[int] = mapped_column(ForeignKey("device_slots.id", ondelete="CASCADE"), index=True)
+    slot_id: Mapped[int] = mapped_column(
+        ForeignKey("device_slots.id", ondelete="CASCADE"),
+        index=True,
+    )
     profile_name: Mapped[str] = mapped_column(String(100))
     status: Mapped[str] = mapped_column(String(32), default="draft")
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())

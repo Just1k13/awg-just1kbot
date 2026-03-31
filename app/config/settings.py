@@ -37,39 +37,32 @@ class Settings(BaseSettings):
         extra="ignore",
     )
 
-    bot: BotSettings
-    db: DatabaseSettings
+    bot: BotSettings | None = None
+    db: DatabaseSettings | None = None
     app: AppRuntimeSettings = AppRuntimeSettings()
 
-    @model_validator(mode="before")
-    @classmethod
-    def map_flat_env_vars(cls, values: object) -> object:
+    bot_token: SecretStr | None = Field(default=None, alias="BOT_TOKEN")
+    database_url: str | None = Field(default=None, alias="DATABASE_URL")
+    app_env: str | None = Field(default=None, alias="APP_ENV")
+    debug: bool | None = Field(default=None, alias="DEBUG")
+
+    @model_validator(mode="after")
+    def normalize_flat_env_vars(self) -> "Settings":
         """Support flat env vars for local development ergonomics."""
-        if not isinstance(values, dict):
-            return values
+        if self.bot is None and self.bot_token is not None:
+            self.bot = BotSettings(token=self.bot_token)
+        if self.db is None and self.database_url is not None:
+            self.db = DatabaseSettings(dsn=self.database_url)
 
-        mapped = dict(values)
-        bot = dict(mapped.get("bot", {}))
-        db = dict(mapped.get("db", {}))
-        app = dict(mapped.get("app", {}))
+        if self.app_env is not None:
+            self.app.env = self.app_env
+        if self.debug is not None:
+            self.app.debug = self.debug
 
-        if "BOT_TOKEN" in mapped and "token" not in bot:
-            bot["token"] = mapped["BOT_TOKEN"]
-        if "DATABASE_URL" in mapped and "dsn" not in db:
-            db["dsn"] = mapped["DATABASE_URL"]
-        if "APP_ENV" in mapped and "env" not in app:
-            app["env"] = mapped["APP_ENV"]
-        if "DEBUG" in mapped and "debug" not in app:
-            app["debug"] = mapped["DEBUG"]
+        if self.bot is None or self.db is None:
+            raise ValueError("Bot token and database DSN must be configured")
 
-        if bot:
-            mapped["bot"] = bot
-        if db:
-            mapped["db"] = db
-        if app:
-            mapped["app"] = app
-
-        return mapped
+        return self
 
 
 @lru_cache(maxsize=1)

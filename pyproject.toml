@@ -26,8 +26,8 @@ dev = [
   "mypy>=1.10,<2.0",
 ]
 
-[tool.setuptools]
-packages = ["app", "bot"]
+[tool.setuptools.packages.find]
+include = ["app*", "bot*"]
 
 [tool.ruff]
 line-length = 100
@@ -39,7 +39,6 @@ select = ["E", "F", "I", "B", "UP", "N"]
 [tool.pytest.ini_options]
 addopts = "-q"
 testpaths = ["tests"]
-asyncio_mode = "auto"
 
 [tool.mypy]
 python_version = "3.12"

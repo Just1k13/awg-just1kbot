@@ -1,5 +1,5 @@
-from app.db.base import Base
 from app.db import models  # noqa: F401
+from app.db.base import Base
 
 
 def test_metadata_contains_required_tables() -> None:
