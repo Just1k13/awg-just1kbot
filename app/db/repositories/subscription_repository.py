@@ -13,6 +13,10 @@ class SubscriptionRepository:
         self._session = session
 
     async def get_latest_for_user(self, user_id: int) -> Subscription | None:
-        stmt = select(Subscription).where(Subscription.user_id == user_id).order_by(Subscription.id.desc())
+        stmt = (
+            select(Subscription)
+            .where(Subscription.user_id == user_id)
+            .order_by(Subscription.id.desc())
+        )
         result = await self._session.execute(stmt)
         return result.scalar_one_or_none()
