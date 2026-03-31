@@ -1,4 +1,8 @@
-"""Deterministic helper-facing adapter stub for read-only protocol commands."""
+"""Deterministic helper adapter for read-only protocol commands.
+
+This module intentionally keeps command handling deterministic and in-process.
+Helper boundary concerns live in ``app.backends.helper_client``.
+"""
 
 from __future__ import annotations
 

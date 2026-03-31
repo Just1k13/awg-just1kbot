@@ -1,7 +1,7 @@
 # Architecture
 
 ## Current stage
-Foundation + backend boundary + single-node preflight + read-only helper protocol draft + deterministic adapter stub + runtime inspection foundation.
+Foundation + backend boundary + single-node preflight + read-only helper protocol draft + deterministic adapter stub + helper-facing client boundary + runtime inspection foundation.
 
 ## In scope now
 - Telegram bot runtime skeleton with aiogram.
@@ -12,6 +12,7 @@ Foundation + backend boundary + single-node preflight + read-only helper protoco
 - Application-level single-node preflight checks.
 - Read-only helper protocol DTO draft (`app/backends/helper_protocol.py`).
 - Deterministic helper adapter stub (`app/backends/helper_adapter.py`).
+- Helper-facing client boundary with stub + real-client skeleton (`app/backends/helper_client.py`).
 - Runtime inspection service (`app/services/runtime_inspection.py`) aligned to backend read-only contract.
 - Draft documentation for future node-helper boundary.
 
@@ -34,7 +35,7 @@ Foundation + backend boundary + single-node preflight + read-only helper protoco
 - `docs/`: project architecture, roadmap, and helper contract draft.
 
 ## Development direction
-1. Helper-facing client/gateway boundary on top of the existing adapter stub (still no runtime execution).
+1. Real helper transport boundary design (process/IPC contract) without product runtime mutations.
 2. Subscription flows.
 3. Profile generation and export.
 4. Second node support.

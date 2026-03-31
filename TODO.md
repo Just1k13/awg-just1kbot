@@ -9,8 +9,12 @@
 - [ ] Keep kernel backend operations as stubs only.
 
 ## Next: helper-facing client/gateway boundary (still no runtime execution)
-- [ ] Add explicit client/gateway interface between backend services and helper adapter.
-- [ ] Keep runtime commands uncalled (no subprocess/system integration).
+- [x] Add explicit client/gateway interface between backend services and helper adapter.
+- [x] Keep runtime commands uncalled (no subprocess/system integration).
+
+## Next: real helper transport boundary planning
+- [ ] Define transport contract for `ProcessHelperClient` (process/IPC shape only).
+- [ ] Keep runtime commands uncalled until transport safety constraints are documented.
 
 ## Later: mutation protocol expansion
 - [ ] Expand transport DTOs for mutation commands when helper execution work starts.

@@ -2,7 +2,7 @@
 
 Production-minded foundation for a future Telegram bot that manages access in an AWG-based setup.
 
-Current stage: foundation + backend boundary + helper protocol + deterministic helper adapter stub + runtime inspection foundation (no real kernel integration yet).
+Current stage: foundation + backend boundary + helper protocol + deterministic helper adapter stub + helper-facing client boundary + runtime inspection foundation (no real kernel integration yet).
 
 ## Current scope (implemented)
 - Clean project structure for bot, domain, db, and docs.
@@ -12,7 +12,7 @@ Current stage: foundation + backend boundary + helper protocol + deterministic h
 - Minimal domain models for future access-management flows.
 - Minimal aiogram bot foundation with `/start` and `/help`.
 - Backend abstraction layer for AWG runtime integration (`app/backends`).
-- Read-only helper protocol DTO draft and deterministic helper adapter stub.
+- Read-only helper protocol DTO draft, deterministic helper adapter stub, and helper-facing client boundary.
 - Runtime inspection service wiring over explicit backend read-only methods.
 - Basic quality tooling setup: pytest, Ruff, mypy, Makefile.
 
