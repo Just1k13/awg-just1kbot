@@ -9,17 +9,20 @@ Production-minded foundation for a future Telegram bot that manages access in an
 - Alembic migration environment with an initial migration.
 - Minimal domain models for future access-management flows.
 - Minimal aiogram bot foundation with `/start` and `/help`.
+- Backend abstraction layer for AWG runtime integration (`app/backends`).
 - Basic quality tooling setup: pytest, Ruff, mypy, Makefile.
 
 ## Intentionally out of scope (not implemented)
+- Real integration with `amneziawg-linux-kernel-module` / `amneziawg-tools`.
+- Real AWG peer lifecycle operations.
+- Node-helper implementation.
 - Payments and Telegram Stars.
 - Referral/reward system.
 - Anti-abuse logic.
-- Real AWG peer lifecycle operations.
 - Multi-node orchestration business logic.
 - Redis/task queues/web UI.
 
-See `TODO.md` and `docs/roadmap.md` for phased implementation.
+See `TODO.md`, `docs/architecture.md`, `docs/node-helper.md`, and `docs/roadmap.md`.
 
 ## Quick start
 1. Create and activate a virtual environment.
@@ -51,7 +54,7 @@ make test
 
 ## Short roadmap
 - Phase 0: scaffold cleanup
-- Phase 1: single-node kernel backend integration
+- Phase 1: single-node kernel integration
 - Phase 2: subscription flows
 - Phase 3: profile generation/export
 - Phase 4: second node support

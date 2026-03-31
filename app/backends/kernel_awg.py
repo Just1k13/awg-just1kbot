@@ -1,47 +1,55 @@
-"""Kernel AWG backend stub.
+"""Linux kernel AWG backend stub.
 
-This module intentionally contains only interface-compliant stubs.
-Real backend logic will be added incrementally in future phases.
+This module intentionally exposes only a contract-compliant stub for the future
+integration with `amneziawg-linux-kernel-module` and `amneziawg-tools`.
+The project is currently in foundation phase, so backend runtime operations are
+not implemented yet.
 """
 
-from app.backends.base import AwgBackend
+from app.backends.base import (
+    AwgBackend,
+    CreatePeerInput,
+    CreatePeerResult,
+    PeerRuntimeState,
+    RenderProfileConfigResult,
+)
 from app.db.models import Node, ProfileNode
 
 
 class KernelAwgBackend(AwgBackend):
-    """Stub implementation for Linux kernel AWG backend."""
+    """Stub implementation for single-node Linux kernel AWG backend."""
 
     async def healthcheck(self, node: Node) -> bool:
-        """Check backend health for the provided node.
+        """Check whether node-level AWG runtime is healthy."""
+        # TODO: run helper-mediated health probe (awg/tooling availability).
+        # TODO: wire to node-helper contract so bot process does not require root.
+        raise NotImplementedError("Kernel AWG healthcheck is not implemented yet")
 
-        TODO: add real health probe against the target host.
-        """
-        raise NotImplementedError("TODO: implement node healthcheck")
+    async def render_profile_config(
+        self,
+        profile_node: ProfileNode,
+    ) -> RenderProfileConfigResult:
+        """Render exported client config for a profile-node mapping."""
+        # TODO: render client config from stored peer/node metadata.
+        # TODO: keep config rendering behind node-helper/api boundary.
+        raise NotImplementedError("Kernel AWG config render is not implemented yet")
 
-    async def render_profile_config(self, profile_node: ProfileNode) -> str:
-        """Render config for a profile-node binding.
-
-        TODO: implement profile rendering/export format.
-        """
-        raise NotImplementedError("TODO: implement profile config rendering")
-
-    async def create_peer(self, profile_node: ProfileNode) -> str:
-        """Create peer in AWG backend.
-
-        TODO: implement real peer provisioning.
-        """
-        raise NotImplementedError("TODO: implement peer creation")
+    async def create_peer(self, request: CreatePeerInput) -> CreatePeerResult:
+        """Create a peer in kernel AWG runtime."""
+        # TODO: call awg peer-add via node-helper when helper contract is ready.
+        raise NotImplementedError("Kernel AWG peer creation is not implemented yet")
 
     async def disable_peer(self, profile_node: ProfileNode) -> None:
-        """Disable peer in AWG backend.
-
-        TODO: implement safe peer disable flow.
-        """
-        raise NotImplementedError("TODO: implement peer disable")
+        """Disable an existing peer without deleting profile metadata."""
+        # TODO: call awg peer-disable via node-helper.
+        raise NotImplementedError("Kernel AWG peer disable is not implemented yet")
 
     async def delete_peer(self, profile_node: ProfileNode) -> None:
-        """Delete peer in AWG backend.
+        """Delete peer from kernel AWG runtime."""
+        # TODO: call awg peer-delete via node-helper.
+        raise NotImplementedError("Kernel AWG peer delete is not implemented yet")
 
-        TODO: implement peer deletion flow.
-        """
-        raise NotImplementedError("TODO: implement peer deletion")
+    async def get_peer_runtime(self, profile_node: ProfileNode) -> PeerRuntimeState:
+        """Read current peer runtime state from kernel AWG runtime."""
+        # TODO: read runtime state from awg peer-show/peer-list via node-helper.
+        raise NotImplementedError("Kernel AWG peer runtime read is not implemented yet")
