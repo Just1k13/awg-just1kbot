@@ -1,7 +1,7 @@
 # Architecture
 
 ## Current stage
-Foundation + backend contract.
+Foundation + backend boundary + single-node preflight.
 
 ## In scope now
 - Telegram bot runtime skeleton with aiogram.
@@ -9,6 +9,7 @@ Foundation + backend contract.
 - Async SQLAlchemy and migration setup.
 - Minimal domain model and repository skeletons.
 - Minimal AWG backend contract and kernel backend stub (no runtime logic).
+- Application-level single-node preflight checks.
 - Draft documentation for future node-helper boundary.
 
 ## Out of scope now
@@ -24,10 +25,11 @@ Foundation + backend contract.
 - `app/config/`: typed settings from env.
 - `app/db/`: ORM models, session setup, repositories.
 - `app/backends/`: backend contract and kernel AWG stub.
+- `app/services/node_preflight.py`: application-level preflight for default single-node runtime.
 - `docs/`: project architecture, roadmap, and helper contract draft.
 
 ## Development direction
-1. Single-node kernel integration.
+1. Safe read-only kernel integration planning (helper-facing wiring).
 2. Subscription flows.
 3. Profile generation and export.
 4. Second node support.

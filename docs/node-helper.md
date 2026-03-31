@@ -19,13 +19,14 @@ A dedicated helper process will isolate privileged execution from bot business l
 - `peer-list`
 - `config-render`
 - `reconcile`
+- `healthcheck`
 
 These commands are contract targets for future implementation and may evolve minimally
 as runtime integration work starts.
 
 ## Scope in this PR
 Node-helper is **not** implemented in this PR.
-This PR only introduces backend interfaces/stubs and documents expected helper boundaries.
+This PR only defines command names and keeps backend stubs aligned with this contract.
 
 ## Responsibility boundaries
 - **bot**: Telegram interaction and user flow orchestration.

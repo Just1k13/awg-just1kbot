@@ -1,24 +1,23 @@
 PYTHON ?= python
 
-.PHONY: install-dev lint typecheck test migrate-up migrate-down bot
+.PHONY: install-dev lint ruff-check test run-bot alembic-upgrade alembic-revision
 
 install-dev:
 	$(PYTHON) -m pip install -e .[dev]
 
-lint:
-	ruff check .
+lint: ruff-check
 
-typecheck:
-	mypy app bot tests
+ruff-check:
+	ruff check .
 
 test:
 	pytest
 
-migrate-up:
+run-bot:
+	$(PYTHON) -m bot.main
+
+alembic-upgrade:
 	alembic upgrade head
 
-migrate-down:
-	alembic downgrade -1
-
-bot:
-	$(PYTHON) -m bot.main
+alembic-revision:
+	alembic revision --autogenerate -m "$(m)"

@@ -1,13 +1,13 @@
 """Alembic environment configuration."""
 
+import os
 from logging.config import fileConfig
 
-from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from app.config import get_settings
+from alembic import context
 from app.db.base import Base
 from app.db.models import (  # noqa: F401
     AuditLog,
@@ -24,9 +24,17 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
-settings = get_settings()
-config.set_main_option("sqlalchemy.url", settings.db.dsn)
 
+def resolve_database_url() -> str:
+    """Resolve database URL for Alembic without requiring full app settings."""
+    return (
+        os.getenv("DATABASE_URL")
+        or os.getenv("DB__DSN")
+        or config.get_main_option("sqlalchemy.url")
+    )
+
+
+config.set_main_option("sqlalchemy.url", resolve_database_url())
 target_metadata = Base.metadata
 
 

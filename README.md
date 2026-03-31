@@ -2,6 +2,8 @@
 
 Production-minded foundation for a future Telegram bot that manages access in an AWG-based setup.
 
+Current stage: foundation + backend boundary + single-node preflight (no real kernel integration yet).
+
 ## Current scope (implemented)
 - Clean project structure for bot, domain, db, and docs.
 - Typed environment-based settings (Pydantic v2).
@@ -24,38 +26,51 @@ Production-minded foundation for a future Telegram bot that manages access in an
 
 See `TODO.md`, `docs/architecture.md`, `docs/node-helper.md`, and `docs/roadmap.md`.
 
-## Quick start
-1. Create and activate a virtual environment.
-2. Install dependencies:
-   ```bash
-   make install-dev
-   ```
-3. Copy environment template and edit values:
-   ```bash
-   cp .env.example .env
-   ```
+## Local development
 
-## Run migrations
+### 1) Create and activate virtual environment
 ```bash
-make migrate-up
+python -m venv .venv
+source .venv/bin/activate
 ```
 
-## Run bot locally
+### 2) Install dependencies
 ```bash
-make bot
+make install-dev
 ```
 
-## Run checks
+### 3) Create local environment file
+```bash
+cp .env.example .env
+```
+
+By default `.env.example` points `DATABASE_URL` to `localhost:5432/awg_bot` and sets `DEFAULT_NODE_CODE=main`.
+
+### 4) Start PostgreSQL locally
+You can use any local PostgreSQL instance.
+
+Option A: local service (example)
+```bash
+createdb awg_bot
+```
+
+Option B: only PostgreSQL via docker compose
+```bash
+docker compose -f docker-compose.dev.yml up -d
+```
+
+### 5) Apply migrations
+```bash
+make alembic-upgrade
+```
+
+### 6) Run bot
+```bash
+make run-bot
+```
+
+### 7) Run quality checks and tests
 ```bash
 make lint
-make typecheck
 make test
 ```
-
-## Short roadmap
-- Phase 0: scaffold cleanup
-- Phase 1: single-node kernel integration
-- Phase 2: subscription flows
-- Phase 3: profile generation/export
-- Phase 4: second node support
-- Phase 5+: hardening and extended capabilities

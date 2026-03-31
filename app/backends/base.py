@@ -6,6 +6,7 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from datetime import datetime
 
+from app.backends.helper_contract import HelperCommand
 from app.db.models import Node, ProfileNode
 
 
@@ -42,11 +43,33 @@ class PeerRuntimeState:
     endpoint: str | None = None
 
 
+@dataclass(slots=True, frozen=True)
+class HealthcheckResult:
+    """Backend node healthcheck result."""
+
+    ok: bool
+    detail: str | None = None
+
+
 class AwgBackend(ABC):
     """Minimal contract for the AWG backend layer."""
 
+    @property
+    def supported_helper_commands(self) -> tuple[HelperCommand, ...]:
+        """Commands this backend expects from the future node-helper boundary."""
+        return (
+            HelperCommand.PEER_ADD,
+            HelperCommand.PEER_DISABLE,
+            HelperCommand.PEER_DELETE,
+            HelperCommand.PEER_SHOW,
+            HelperCommand.PEER_LIST,
+            HelperCommand.CONFIG_RENDER,
+            HelperCommand.RECONCILE,
+            HelperCommand.HEALTHCHECK,
+        )
+
     @abstractmethod
-    async def healthcheck(self, node: Node) -> bool:
+    async def healthcheck(self, node: Node) -> HealthcheckResult:
         """Validate that a node is reachable and backend-ready."""
 
     @abstractmethod
