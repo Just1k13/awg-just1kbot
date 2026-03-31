@@ -12,25 +12,24 @@ A dedicated helper process will isolate privileged execution from bot business l
 - Node host remains the source of truth for runtime state.
 
 ## Current stage
-Protocol draft + helper-facing adapter stub.
+Protocol draft only.
 
 - Runtime helper process is **not implemented**.
-- Runtime/system commands are **not executed** by the app.
+- Runtime commands are **not executed** by the app yet.
 - No IPC/transport implementation exists (no HTTP, JSON-RPC, Unix socket, subprocess wiring).
 
-## Read-only protocol + adapter stub in this phase
-The repository includes:
-- `app/backends/helper_protocol.py` for request/result envelopes and read-only DTO shape.
-- `app/backends/helper_adapter.py` for deterministic in-process stub handling.
+## Read-only protocol draft in this phase
+The repository now includes `app/backends/helper_protocol.py` with request/result envelopes
+for read-only command interaction shape.
 
-Read-only command scope:
+Read-only command DTO scope:
 - `healthcheck`
 - `peer-show`
 - `peer-list`
 - `config-render`
 
 Mutation commands remain in `HelperCommand` contract only and are intentionally not expanded
-into transport/adapter execution in this phase.
+into transport DTOs in this phase.
 
 ## Planned helper commands (full contract target)
 - `peer-add`
@@ -43,8 +42,8 @@ into transport/adapter execution in this phase.
 - `healthcheck`
 
 ## Next step
-Swap the stub adapter for a real helper-facing implementation boundary while preserving the
-same protocol DTO shape and keeping system execution isolated behind that boundary.
+Add a helper-facing adapter stub that consumes protocol DTOs but still does not execute
+real node/system commands.
 
 ## Responsibility boundaries
 - **bot**: Telegram interaction and user flow orchestration.

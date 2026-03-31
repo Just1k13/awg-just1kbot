@@ -11,7 +11,6 @@ from app.backends.base import (
     PeerRuntimeState,
     RenderProfileConfigResult,
 )
-from app.backends.helper_adapter import HelperAdapterStub
 from app.backends.helper_contract import READ_ONLY_HELPER_COMMANDS, HelperCommand
 from app.backends.helper_protocol import (
     ConfigRenderResponse,
@@ -36,7 +35,6 @@ __all__ = [
     "HealthcheckResult",
     "NodeHealthSnapshot",
     "PeerRuntimeSnapshot",
-    "HelperAdapterStub",
     "HelperCommand",
     "READ_ONLY_HELPER_COMMANDS",
     "HelperCommandRequest",

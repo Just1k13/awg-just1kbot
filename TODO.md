@@ -1,15 +1,14 @@
 # TODO
 
-## Current: single-node preflight + helper protocol + adapter stub
+## Current: single-node preflight + helper protocol draft
 - [x] Keep backend/helper boundary explicit and typed.
 - [x] Add application-level single-node preflight checks.
 - [x] Add read-only helper protocol DTO draft for request/result envelopes.
-- [x] Add deterministic read-only helper-facing adapter stub.
 - [ ] Keep kernel backend operations as stubs only.
 
-## Next: real helper-facing execution boundary
-- [ ] Replace adapter stub with real helper boundary implementation that keeps protocol DTO shape stable.
-- [ ] Keep runtime/system execution isolated behind helper boundary only.
+## Next: helper-facing adapter stub (no runtime execution)
+- [ ] Add adapter stub that accepts protocol DTOs and returns deterministic stub results.
+- [ ] Keep runtime commands uncalled (no subprocess/system integration).
 
 ## Later: mutation protocol expansion
 - [ ] Expand transport DTOs for mutation commands when helper execution work starts.
