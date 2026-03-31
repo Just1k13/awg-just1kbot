@@ -94,3 +94,46 @@ class AwgBackend(ABC):
     @abstractmethod
     async def get_peer_runtime(self, profile_node: ProfileNode) -> PeerRuntimeState:
         """Return current peer runtime status from backend."""
+
+@dataclass(slots=True, frozen=True)
+class BackendCapabilitySnapshot:
+    """Describes which capabilities a backend exposes."""
+
+    backend_name: str
+    helper_commands: frozenset[HelperCommand] = frozenset()
+    supports_runtime_inspection: bool = False
+    supports_config_rendering: bool = False
+    supports_peer_mutation: bool = False
+
+    @property
+    def read_only_commands(self) -> frozenset[HelperCommand]:
+        """Backward-compatible alias for read-only helper commands."""
+        return frozenset(
+            cmd
+            for cmd in self.helper_commands
+            if cmd in {
+                HelperCommand.HEALTHCHECK,
+                HelperCommand.PEER_SHOW,
+                HelperCommand.PEER_LIST,
+                HelperCommand.CONFIG_RENDER,
+            }
+        )
+
+    @property
+    def mutation_commands(self) -> frozenset[HelperCommand]:
+        """Backward-compatible alias for mutation helper commands."""
+        return frozenset(
+            cmd
+            for cmd in self.helper_commands
+            if cmd in {
+                HelperCommand.PEER_ADD,
+                HelperCommand.PEER_DISABLE,
+                HelperCommand.PEER_DELETE,
+                HelperCommand.RECONCILE,
+            }
+        )
+
+# Backward-compatible aliases for runtime inspection layer.
+NodeHealthSnapshot = HealthcheckResult
+PeerRuntimeSnapshot = PeerRuntimeState
+

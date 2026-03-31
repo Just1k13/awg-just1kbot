@@ -54,3 +54,18 @@ class KernelAwgBackend(AwgBackend):
         """Read current peer runtime state from kernel AWG runtime."""
         # TODO: read runtime state via node-helper `peer-show` / `peer-list`.
         raise NotImplementedError("Kernel AWG peer runtime read is not implemented yet")
+
+def _kernel_awg_get_capabilities(self):
+    from app.backends.base import BackendCapabilitySnapshot
+    from app.backends.helper_contract import HelperCommand
+
+    return BackendCapabilitySnapshot(
+        backend_name="kernel_awg",
+        helper_commands=frozenset(HelperCommand),
+        supports_runtime_inspection=True,
+        supports_config_rendering=True,
+        supports_peer_mutation=False,
+    )
+
+
+KernelAwgBackend.get_capabilities = _kernel_awg_get_capabilities

@@ -1,10 +1,13 @@
-"""Backend implementations and abstractions."""
+"""Backend exports for application services and tests."""
 
 from app.backends.base import (
     AwgBackend,
+    BackendCapabilitySnapshot,
     CreatePeerInput,
     CreatePeerResult,
     HealthcheckResult,
+    NodeHealthSnapshot,
+    PeerRuntimeSnapshot,
     PeerRuntimeState,
     RenderProfileConfigResult,
 )
@@ -13,9 +16,12 @@ from app.backends.kernel_awg import KernelAwgBackend
 
 __all__ = [
     "AwgBackend",
+    "BackendCapabilitySnapshot",
     "CreatePeerInput",
     "CreatePeerResult",
     "HealthcheckResult",
+    "NodeHealthSnapshot",
+    "PeerRuntimeSnapshot",
     "PeerRuntimeState",
     "RenderProfileConfigResult",
     "HelperCommand",
