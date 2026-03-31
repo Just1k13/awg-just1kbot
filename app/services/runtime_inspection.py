@@ -45,6 +45,14 @@ def describe_backend_capabilities(backend: AwgBackend) -> BackendCapabilitySnaps
         return get_capabilities()
 
     helper_commands = getattr(backend, "helper_commands", ())
+    if not helper_commands:
+        helper_commands = (
+            "healthcheck",
+            "peer-show",
+            "peer-list",
+            "config-render",
+        )
+
     return BackendCapabilitySnapshot(
         backend_name=backend.__class__.__name__,
         helper_commands=frozenset(helper_commands),

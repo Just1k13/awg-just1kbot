@@ -105,6 +105,34 @@ class BackendCapabilitySnapshot:
     supports_config_rendering: bool = False
     supports_peer_mutation: bool = False
 
+    @property
+    def read_only_commands(self) -> frozenset[HelperCommand]:
+        """Backward-compatible alias for read-only helper commands."""
+        return frozenset(
+            cmd
+            for cmd in self.helper_commands
+            if cmd in {
+                HelperCommand.HEALTHCHECK,
+                HelperCommand.PEER_SHOW,
+                HelperCommand.PEER_LIST,
+                HelperCommand.CONFIG_RENDER,
+            }
+        )
+
+    @property
+    def mutation_commands(self) -> frozenset[HelperCommand]:
+        """Backward-compatible alias for mutation helper commands."""
+        return frozenset(
+            cmd
+            for cmd in self.helper_commands
+            if cmd in {
+                HelperCommand.PEER_ADD,
+                HelperCommand.PEER_DISABLE,
+                HelperCommand.PEER_DELETE,
+                HelperCommand.RECONCILE,
+            }
+        )
+
 # Backward-compatible aliases for runtime inspection layer.
 NodeHealthSnapshot = HealthcheckResult
 PeerRuntimeSnapshot = PeerRuntimeState
