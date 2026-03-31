@@ -19,5 +19,5 @@ __all__ = [
     "PeerRuntimeState",
     "RenderProfileConfigResult",
     "HelperCommand",
-    "KernelAwgBackend",
-]
+    "KernelAwgBackend",, "BackendCapabilitySnapshot"]
+from app.backends.base import BackendCapabilitySnapshot

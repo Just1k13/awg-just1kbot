@@ -1,3 +1,4 @@
+from typing import FrozenSet
 """Minimal backend contract for future AWG runtime integration."""
 
 from __future__ import annotations
@@ -94,3 +95,14 @@ class AwgBackend(ABC):
     @abstractmethod
     async def get_peer_runtime(self, profile_node: ProfileNode) -> PeerRuntimeState:
         """Return current peer runtime status from backend."""
+
+@dataclass(slots=True, frozen=True)
+class BackendCapabilitySnapshot:
+    """Describes which capabilities a backend exposes."""
+
+    backend_name: str
+    helper_commands: FrozenSet[str] = frozenset()
+    supports_runtime_inspection: bool = False
+    supports_config_rendering: bool = False
+    supports_peer_mutation: bool = False
+
